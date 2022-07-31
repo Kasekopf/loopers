@@ -1,5 +1,5 @@
 {
-  "name": "kol-js-starter",
+  "name": "loopers",
   "version": "1.0.0",
   "description": "A script to see who has been looping recently.",
   "main": "KoLmafia/scripts/loopers/loopers.js",
