@@ -1,8 +1,8 @@
 {
   "name": "kol-js-starter",
   "version": "1.0.0",
-  "description": "Example package for KoLmafia TypeScript scripts.",
-  "main": "KoLmafia/scripts/kol-js-starter/main-script-name.js",
+  "description": "A script to see who has been looping recently.",
+  "main": "KoLmafia/scripts/loopers/loopers.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "yarn run build:types && yarn run build:js",
@@ -38,7 +38,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/docrostov/kol-js-starter.git"
+    "url": "git+https://github.com/Kasekopf/loopers.git"
   },
   "keywords": [
     "KoLMafia",
@@ -46,7 +46,7 @@
     "TS"
   ],
   "bugs": {
-    "url": "https://github.com/docrostov/kol-js-starter/issues"
+    "url": "https://github.com/Kasekopf/loopers/issues"
   },
-  "homepage": "https://github.com/docrostov/kol-js-starter#readme"
+  "homepage": "https://github.com/Kasekopf/loopers#readme"
 }
