@@ -40,27 +40,30 @@ export function main(): void {
     }
   } while (match);
 
-  const gyouers = new Set<string>(
-    runs.filter((run) => run.days === 1 && run.path === "Grey You").map((run) => run.player)
+  const paths_with_one_days = new Set<string>(
+    runs.filter((run) => run.days === 1).map((run) => run.path)
   );
-  const csers = new Set<string>(
-    runs
-      .filter((run) => run.days === 1 && run.path === "Community Service")
-      .map((run) => run.player)
+  paths_with_one_days.delete("Unrestricted");
+  const onedayers_by_path = new Map<string, Set<string>>(
+    [...paths_with_one_days].map((path_name) => [
+      path_name,
+      new Set<string>(
+        runs.filter((run) => run.days === 1 && run.path === path_name).map((run) => run.player)
+      ),
+    ])
   );
   const casual = new Set<string>(
     runs.filter((run) => run.days === 1 && run.core === "casual").map((run) => run.player)
   );
   print("In the last 500 ascensions:");
-  print(
-    `* ${gyouers.size} players did a 1-day Grey You run. Of those, ${
-      [...casual].filter((p) => gyouers.has(p)).length
-    } players also did a 1-day casual run.`
-  );
-  print(
-    `* ${csers.size} players did a 1-day Community Service run. Of those, ${
-      [...casual].filter((p) => csers.has(p)).length
-    } players also did a 1-day casual run.`
-  );
+  for (const [path_name, onedayers] of onedayers_by_path) {
+    print(
+      `* ${onedayers.size} player${
+        onedayers.size > 1 ? "s" : ""
+      } did a 1-day ${path_name} run. Of those, ${
+        [...casual].filter((p) => onedayers.has(p)).length
+      } players also did a 1-day casual run.`
+    );
+  }
   print(`* ${casual.size} players did a 1-day casual run in total.`);
 }
