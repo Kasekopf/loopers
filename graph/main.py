@@ -16,6 +16,10 @@ import requests
 from typing import Iterable, Dict, Sequence, Set
 
 
+GRAPH_END_DATE = '2022-10-20'
+RUN_END_DATE = '2022-10-22'
+
+
 def date(text: str):
     return datetime.datetime.strptime(text, "%Y-%m-%d").date()
 
@@ -81,14 +85,14 @@ class DateFigure:
         self.ax.set_title('The Rise of the KoL Looper')
         self.ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d/%Y'))
         self.ax.xaxis.set_major_locator(mdates.DayLocator(interval=365))
-        self.ax.set_xlim(left=date('2018-01-01'), right=date('2022-08-05'))
+        self.ax.set_xlim(left=date('2018-01-01'), right=date(GRAPH_END_DATE))
         self.ax.set_xticks([
             date('2018-01-01'),
             date('2019-01-01'),
             date('2020-01-01'),
             date('2021-01-01'),
             date('2022-01-01'),
-            date('2022-08-05')
+            date(GRAPH_END_DATE)
         ])
         self.ax.set_ylim(bottom=0, top=60)
         self.f.autofmt_xdate()
@@ -127,7 +131,7 @@ def find_loopers(runs: Iterable[Run], time_window: int, threshold: int):
         players_by_date[day] = [run.player for run in runs_in_day]
 
     loopers_by_date = {}
-    for day in daterange(date('2007-07-01'), date('2022-08-08')):
+    for day in daterange(date('2007-07-01'), date(RUN_END_DATE)):
         players = []
         for i in range(-time_window, time_window+1):
             offset_players = players_by_date[day + datetime.timedelta(days=i)]
