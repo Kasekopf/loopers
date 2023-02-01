@@ -16,8 +16,8 @@ import requests
 from typing import Iterable, Dict, Sequence, Set
 
 
-GRAPH_END_DATE = '2022-10-20'
-RUN_END_DATE = '2022-10-22'
+GRAPH_END_DATE = '2023-01-27'
+RUN_END_DATE = '2023-02-01'
 
 
 def date(text: str):
@@ -94,7 +94,7 @@ class DateFigure:
             date('2022-01-01'),
             date(GRAPH_END_DATE)
         ])
-        self.ax.set_ylim(bottom=0, top=60)
+        self.ax.set_ylim(bottom=0, top=100)
         self.f.autofmt_xdate()
         self.ax.set_xlabel('Week Date')
         self.ax.set_ylabel('Number of Loopers')
@@ -114,7 +114,7 @@ class DateFigure:
 
     def show(self):
         legend = self.ax.legend(
-            loc=(0.01, 0.58),
+            loc=(0.01, 0.51),
             frameon=False,
         )
         for handle in legend.legendHandles:
@@ -146,6 +146,10 @@ def overlap_loopers(a: Dict[datetime.date, Set], b: Dict[datetime.date, Set]):
     return {key: a[key].intersection(b[key]) for key in a}
 
 
+def remove_loopers(a: Dict[datetime.date, Set], b: Dict[datetime.date, Set]):
+    return {key: a[key].difference(b[key]) for key in a }
+
+
 def do():
     noncasual = pickle_cache('normal') + pickle_cache('hardcore')
     casual = pickle_cache('casual')
@@ -156,12 +160,15 @@ def do():
 
     cs_fullloopers = overlap_loopers(casual_loopers, cs_loopers)
     gyou_fullloopers = overlap_loopers(casual_loopers, gyou_loopers)
+    casual_only = remove_loopers(remove_loopers(casual_loopers, gyou_loopers), cs_loopers)
 
     f = DateFigure()
+    f.plot_count(casual_only, linewidth=1, color='black', label='Casual (Only)')
     f.plot_count(cs_loopers, linewidth=1, color='blue', label='Community Service')
     f.plot_count(cs_fullloopers, linewidth=1, color='blue', linestyle=':', label='Community Service & Casual')
     f.plot_count(gyou_loopers, linewidth=1, color='green', label='Grey You')
     f.plot_count(gyou_fullloopers, linewidth=1, color='green', linestyle=':', label='Grey You & Casual')
+
     f.show()
 
 
