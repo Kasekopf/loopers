@@ -11,17 +11,19 @@ import requests
 from typing import Iterable, Dict, Sequence, Set
 
 
-GRAPH_END_DATE = '2023-01-27'
-RUN_END_DATE = '2023-02-01'
+GRAPH_END_DATE = '2023-11-30'
+RUN_END_DATE = '2023-12-04'
+MAX_ID = 10000000
 
 
 def date(text: str):
     return datetime.datetime.strptime(text, "%Y-%m-%d").date()
 
 
-def koldb_url(run_type: str, num_to_get: int):
+def koldb_url(run_type: str, num_to_get: int, id_start: int, id_end: int):
     return f'http://koldb.com/searchresults.php?type={run_type}' +\
-           f'&xgoo=on&days1=1&days2=1&sortby=dt&timetype=ralph&event=ns13&lim={num_to_get}'
+           f'&xgoo=on&days1=1&days2=1&sortby=dt&timetype=ralph&event=ns13&lim={num_to_get}' +\
+           f'&id1={id_start}&id2={id_end}'
 
 
 def date(text: str):
@@ -51,7 +53,10 @@ def get_runs(url):
     page = requests.get(url)
     soup = bs4.BeautifulSoup(page.content, 'html.parser')
 
-    rows = soup.find('table', {'id': 'result_table'}).find_all('tr')
+    table = soup.find('table', {'id': 'result_table'})
+    if table is None:
+        return []
+    rows = table.find_all('tr')
     return [Run(row) for row in rows[1:]]
 
 
@@ -61,8 +66,15 @@ def pickle_cache(run_type: str):
             return pickle.load(input_file)
     print(f'Loading {run_type} from koldb')
 
-    url = koldb_url(run_type, 100000)
-    runs = get_runs(url)
+    runs = []
+    for i in range(0, MAX_ID, 100000):
+        url = koldb_url(run_type, 10000, i, i+100000)
+        print(url)
+        runs_segment = get_runs(url)
+        print(f'   {len(runs_segment)}')
+        if len(runs_segment) == 0:
+            break
+        runs.extend(runs_segment)
     os.makedirs('cache', exist_ok=True)
     with open(f'cache/{run_type}', 'wb') as output_file:
         pickle.dump(runs, output_file)
@@ -87,9 +99,10 @@ class DateFigure:
             date('2020-01-01'),
             date('2021-01-01'),
             date('2022-01-01'),
+            date('2023-01-01'),
             date(GRAPH_END_DATE)
         ])
-        self.ax.set_ylim(bottom=0, top=100)
+        self.ax.set_ylim(bottom=0, top=140)
         self.f.autofmt_xdate()
         self.ax.set_xlabel('Week Date')
         self.ax.set_ylabel('Number of Loopers')
