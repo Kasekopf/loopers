@@ -122,7 +122,7 @@ class DateFigure:
 
     def show(self):
         legend = self.ax.legend(
-            loc=(0.01, 0.51),
+            loc=(0.01, 0.45),
             frameon=False,
         )
         for handle in legend.legendHandles:
@@ -165,6 +165,7 @@ def do():
     casual_loopers = find_loopers(casual, 3, 4)
     gyou_loopers = find_loopers(filter(lambda r: r.path == "Grey You", noncasual), 3, 4)
     cs_loopers = find_loopers(filter(lambda r: r.path == "Community Service", noncasual), 3, 4)
+    smol_loopers = find_loopers(filter(lambda r: r.path == "A Shrunken Adventurer am I", noncasual), 3, 4)
 
     cs_fullloopers = overlap_loopers(casual_loopers, cs_loopers)
     gyou_fullloopers = overlap_loopers(casual_loopers, gyou_loopers)
@@ -176,6 +177,8 @@ def do():
     f.plot_count(cs_fullloopers, linewidth=1, color='blue', linestyle=':', label='Community Service & Casual')
     f.plot_count(gyou_loopers, linewidth=1, color='green', label='Grey You')
     f.plot_count(gyou_fullloopers, linewidth=1, color='green', linestyle=':', label='Grey You & Casual')
+    f.plot_count(smol_loopers, linewidth=1.5, color='black')
+    f.plot_count(smol_loopers, linewidth=1, color='orange', label='Shrunken Adventurer')
 
     f.show()
 
