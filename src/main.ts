@@ -55,15 +55,11 @@ export function main(): void {
   const casual = new Set<string>(
     runs.filter((run) => run.days === 1 && run.core === "casual").map((run) => run.player)
   );
+  onedayers_by_path.set("Casual", casual);
   print("In the last 500 ascensions:");
   for (const [path_name, onedayers] of onedayers_by_path) {
     print(
-      `* ${onedayers.size} player${
-        onedayers.size > 1 ? "s" : ""
-      } did a 1-day ${path_name} run. Of those, ${
-        [...casual].filter((p) => onedayers.has(p)).length
-      } players also did a 1-day casual run.`
+      `* ${onedayers.size} player${onedayers.size > 1 ? "s" : ""} did a 1-day ${path_name} run.`
     );
   }
-  print(`* ${casual.size} players did a 1-day casual run in total.`);
 }
