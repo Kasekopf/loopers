@@ -11,8 +11,8 @@ import requests
 from typing import Iterable, Dict, Sequence, Set
 
 
-GRAPH_END_DATE = '2023-11-30'
-RUN_END_DATE = '2023-12-04'
+GRAPH_END_DATE = '2024-06-06'
+RUN_END_DATE = '2024-06-09'
 MAX_ID = 10000000
 
 
@@ -100,6 +100,7 @@ class DateFigure:
             date('2021-01-01'),
             date('2022-01-01'),
             date('2023-01-01'),
+            date('2024-01-01'),
             date(GRAPH_END_DATE)
         ])
         self.ax.set_ylim(bottom=0, top=140)
@@ -122,7 +123,7 @@ class DateFigure:
 
     def show(self):
         legend = self.ax.legend(
-            loc=(0.01, 0.45),
+            loc=(0.01, 0.51),
             frameon=False,
         )
         for handle in legend.legendHandles:
@@ -166,6 +167,7 @@ def do():
     gyou_loopers = find_loopers(filter(lambda r: r.path == "Grey You", noncasual), 3, 4)
     cs_loopers = find_loopers(filter(lambda r: r.path == "Community Service", noncasual), 3, 4)
     smol_loopers = find_loopers(filter(lambda r: r.path == "A Shrunken Adventurer am I", noncasual), 3, 4)
+    robot_loopers = find_loopers(filter(lambda r: r.path == "You, Robot", noncasual), 3, 4)
 
     cs_fullloopers = overlap_loopers(casual_loopers, cs_loopers)
     gyou_fullloopers = overlap_loopers(casual_loopers, gyou_loopers)
@@ -174,11 +176,12 @@ def do():
     f = DateFigure()
     f.plot_count(casual_only, linewidth=1, color='black', label='Casual (Only)')
     f.plot_count(cs_loopers, linewidth=1, color='blue', label='Community Service')
-    f.plot_count(cs_fullloopers, linewidth=1, color='blue', linestyle=':', label='Community Service & Casual')
+    # f.plot_count(cs_fullloopers, linewidth=1, color='blue', linestyle=':', label='Community Service & Casual')
     f.plot_count(gyou_loopers, linewidth=1, color='green', label='Grey You')
-    f.plot_count(gyou_fullloopers, linewidth=1, color='green', linestyle=':', label='Grey You & Casual')
-    f.plot_count(smol_loopers, linewidth=1.5, color='black')
+    # f.plot_count(gyou_fullloopers, linewidth=1, color='green', linestyle=':', label='Grey You & Casual')
     f.plot_count(smol_loopers, linewidth=1, color='orange', label='Shrunken Adventurer')
+    f.plot_count(robot_loopers, linewidth=1.5, color='black')
+    f.plot_count(robot_loopers, linewidth=1, color='purple', label='You, Robot')
 
     f.show()
 
