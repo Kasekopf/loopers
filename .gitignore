@@ -109,4 +109,3 @@ venv.bak/
 *.xml
 .idea/
 graph/cache/
-graph/output.png
